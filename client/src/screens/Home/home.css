@@ -171,6 +171,8 @@
       padding: 20px;
       flex: 1;
       overflow: scroll;
+      scrollbar-width: none; 
+    -ms-overflow-style: none;
       display: flex;
       flex-direction: column;
       gap: 20px;
