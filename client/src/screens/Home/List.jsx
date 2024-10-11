@@ -8,71 +8,73 @@ import plusIcon from '../../assets/icons/plus.png'
 import minusIcon from '../../assets/icons/minus.png'
 import avatarIcon from '../../assets/icons/avatar.png'
 import AddUser from './AddUser'
+import { useSelector } from 'react-redux'
 
 
 const List = () => {
+    const { currentUser } = useSelector(state => state.common)
     const [addMode, setAddMode] = useState(false);
-  return (
-    <div className='list'>
-       <div className='userInfo'>
-      <div className="user">
-        <img src={Avatar} alt="" />
-        <h2>{'username'}</h2>
-      </div>
-      <div className="icons">
-        <img src={moreIcon} alt="" />
-        <img src={videoIcon} alt="" />
-        <img src={editIcon} alt="" />
-      </div>
-    </div>
-      {/* ChatList */}
-      <div className='chatList'>
-            <div className="search">
-                <div className="searchBar">
-                    <img src={searchIcon} alt='' />
-                    <input type="text" placeholder="Search" />
+    return (
+        <div className='list'>
+            <div className='userInfo'>
+                <div className="user">
+                    <img src={currentUser?.avatar ? currentUser?.avatar : Avatar} alt="" />
+                    <h2>{currentUser?.username}</h2>
                 </div>
-                <img src={addMode? minusIcon :plusIcon} alt="" className='add' onClick={()=>setAddMode(!addMode)} />
-            </div>
-            <div className="item">
-                <img src={avatarIcon} alt=""  />
-                <div className="texts">
-                    <span>User</span>
-                    <p>Hello</p>
+                <div className="icons">
+                    <img src={moreIcon} alt="" />
+                    <img src={videoIcon} alt="" />
+                    <img src={editIcon} alt="" />
                 </div>
             </div>
-            <div className="item">
-                <img src={avatarIcon} alt=""  />
-                <div className="texts">
-                    <span>User</span>
-                    <p>Hello</p>
+            {/* ChatList */}
+            <div className='chatList'>
+                <div className="search">
+                    <div className="searchBar">
+                        <img src={searchIcon} alt='' />
+                        <input type="text" placeholder="Search" />
+                    </div>
+                    <img src={addMode ? minusIcon : plusIcon} alt="" className='add' onClick={() => setAddMode(!addMode)} />
+                </div>
+                <div className="item">
+                    <img src={avatarIcon} alt="" />
+                    <div className="texts">
+                        <span>User</span>
+                        <p>Hello</p>
+                    </div>
+                </div>
+                <div className="item">
+                    <img src={avatarIcon} alt="" />
+                    <div className="texts">
+                        <span>User</span>
+                        <p>Hello</p>
+                    </div>
+                </div>
+                <div className="item">
+                    <img src={avatarIcon} alt="" />
+                    <div className="texts">
+                        <span>User</span>
+                        <p>Hello</p>
+                    </div>
+                </div>
+                <div className="item">
+                    <img src={avatarIcon} alt="" />
+                    <div className="texts">
+                        <span>User</span>
+                        <p>Hello</p>
+                    </div>
+                </div>
+                <div className="item">
+                    <img src={avatarIcon} alt="" />
+                    <div className="texts">
+                        <span>User</span>
+                        <p>Hello</p>
+                    </div>
                 </div>
             </div>
-            <div className="item">
-                <img src={avatarIcon} alt=""  />
-                <div className="texts">
-                    <span>User</span>
-                    <p>Hello</p>
-                </div>
-            </div>
-            <div className="item">
-                <img src={avatarIcon} alt=""  />
-                <div className="texts">
-                    <span>User</span>
-                    <p>Hello</p>
-                </div>
-            </div>
-            <div className="item">
-                <img src={avatarIcon} alt=""  />
-                <div className="texts">
-                    <span>User</span>
-                    <p>Hello</p>
-                </div>
-            </div>
+            {addMode && <AddUser />}
         </div>
-       {addMode && <AddUser/>}
-    </div>
-  )
+    )
 }
 
 export default List

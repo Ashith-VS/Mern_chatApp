@@ -15,7 +15,7 @@ activeRequests++;
             "Content-Type": "application/json",
             "Accept": "application/json",
             "Accept-Language": "en",
-            // Authorization: localStorage.getItem('auth_token') ? `Bearer ${localStorage.getItem('auth_token')}` : null,
+            Authorization: localStorage.getItem('auth_token') ? `Bearer ${localStorage.getItem('auth_token')}` : null,
             ...headers,
         },
         data,
