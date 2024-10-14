@@ -5,7 +5,7 @@ import Notification from './components/Notification'
 const App = () => {
 
   return (
-    <div className='container'>
+    <div>
       <Router />
       <Notification/>
     </div>

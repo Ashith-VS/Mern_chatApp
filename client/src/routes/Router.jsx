@@ -6,7 +6,7 @@ import PrivateRoute from './PrivateRoute'
 const Router = () => {
     return (
         <BrowserRouter>
-            <Suspense fallback={<div className='loader'>Loading...</div>}>
+            <Suspense fallback={<div>Loading...</div>}>
                 <Routes>
                     <Route path="login" element={<Login />} />
                     <Route path="register" element={<Register />} />
