@@ -1,10 +1,11 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom';
 import { isEmpty } from 'lodash'
 import { toast } from 'react-toastify';
 import networkRequest from '../../http/api';
 import { UrlEndPoint } from '../../http/apiConfig';
 import bgImage from "../../assets/icons/bg.jpg"
+import { useSelector } from 'react-redux';
 
 
 const Login = () => {
@@ -15,6 +16,14 @@ const Login = () => {
         email: "",
         password: ""
     })
+    const token = localStorage.getItem('auth_token')
+    const { currentUser } = useSelector(state => state.common)
+
+    useEffect(() => {
+        if (token && isEmpty(currentUser)) {    
+         navigate("/") //current user login  once then not allowed to login again
+        } 
+      }, []);
 
     const handleSubmit = async (e) => {
         e.preventDefault();

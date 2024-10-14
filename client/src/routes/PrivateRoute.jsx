@@ -7,41 +7,29 @@ import { UrlEndPoint } from '../http/apiConfig';
 import networkRequest from '../http/api';
 
 const PrivateRoute = () => {
-    const isAuthenticated = true
+    const dispatch = useDispatch();
+    const fetchCurrentUser = async () => {
+        try {
+            const url = UrlEndPoint.currentUser
+            const res = await networkRequest({ url })
+            dispatch(currentUserAuth(res.user))
+        } catch (error) {
+            console.error(error)
+        }
+    }
+    const token = localStorage.getItem('auth_token');
+    const { currentUser } = useSelector(state => state.common)
 
-    // const dispatch = useDispatch();
-    // const fetchCurrentUser = async () => {
-    //     try {
-    //         const url = UrlEndPoint.currentUser
-    //         const res = await networkRequest({ url })
-    //         dispatch(currentUserAuth(res.user))
-    //     } catch (error) {
-    //         console.error(error)
-    //     }
-    // }
-    // const token = localStorage.getItem('auth_token');
-    // console.log('token: ', token);
 
-    // useEffect(() => {
-    //     if (!isEmpty(token) && isEmpty(currentUser)) {
-    //         fetchCurrentUser()
-    //         // fetchChats();
-    //     }
-    // }, [])
-    // // const currentUser = false
-    // const { currentUser } = useSelector(state => state.common)
-    // const isAuthenticated = isEmpty(currentUser);
-    // // if (currentUser === null) {
-    // //     // Handle loading state if needed, or redirect immediately.
-    // //     return <div>Loading...</div>;
-    // // }
-    // console.log('currentUser: ', currentUser);
-
-    // console.log('isEmpty(currentUser): ', !isEmpty(currentUser));
-
+    useEffect(() => {
+        if (!isEmpty(token) && isEmpty(currentUser)) {
+            console.log('!isEmpty(token) && isEmpty(currentUser): ', !isEmpty(token) && !isEmpty(currentUser));
+            fetchCurrentUser()
+        }
+    }, [token, currentUser])
 
     return (
-        isAuthenticated ? <Outlet /> : <Navigate to="/login" />
+        !isEmpty(currentUser)? <Outlet /> : <Navigate to="/login" />
     )
 }
 
