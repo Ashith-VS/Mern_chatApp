@@ -35,7 +35,7 @@ const Login = () => {
                 }
             } catch (error) {
                 console.error('error:', error)
-                toast.error(error.message|| "Login failed")
+                toast.error(error.message || "Login failed")
                 setFormData({ email: '', password: '' })
             }
         }
@@ -51,7 +51,7 @@ const Login = () => {
         }
         if (!password) {
             error.password = "Password is required"
-        } 
+        }
         return error
     }
 
@@ -61,62 +61,62 @@ const Login = () => {
     }
 
     return (
-        <div className='flex justify-center items-center h-screen bg-cover' style={{background:`url(${bgImage})`,backgroundSize: 'cover', backgroundRepeat: 'no-repeat'}} >
-    <div className="bg-slate-800 border border-slate-400 rounded-md p-8 shadow-lg backdrop-filter backdrop-blur-sm bg-opacity-30 relative">
-    <h1 className='text-4xl text-white font-bold text-center mb-6'>Welcome back</h1>
-    <form onSubmit={handleSubmit}>
-        {/* Email Input */}
-        <div className='relative my-4'>
-            <input
-                type="text"
-                placeholder="Email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                className='block w-72 py-2.3 text-sm text-white placeholder-black  bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:focus:border-blue-500 focus:border-black focus:outline-none focus:ring-0 focus:text-white focus:border-blue-600 peer'
-            />
-            {/* Email Error */}
-            {error?.email && <p className='mt-2 text-xs text-red-500'>{error.email}</p>}
-        </div>
+        <div className='flex justify-center items-center h-screen bg-cover' style={{ background: `url(${bgImage})`, objectFit: "cover"}} >
+            <div className="bg-slate-800 border border-slate-400 rounded-md p-8 shadow-lg backdrop-filter backdrop-blur-sm bg-opacity-30 relative">
+                <h1 className='text-4xl text-white font-bold text-center mb-6'>Welcome back</h1>
+                <form onSubmit={handleSubmit}>
+                    {/* Email Input */}
+                    <div className='relative my-4'>
+                        <input
+                            type="text"
+                            placeholder="Email"
+                            name="email"
+                            value={formData.email}
+                            onChange={handleChange}
+                            className='block w-72 py-2.3 text-sm text-white placeholder-black  bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:focus:border-blue-500 focus:border-black focus:outline-none focus:ring-0 focus:text-white focus:border-blue-600 peer'
+                        />
+                        {/* Email Error */}
+                        {error?.email && <p className='mt-2 text-xs text-red-500'>{error.email}</p>}
+                    </div>
 
-        {/* Password Input */}
-        <div className="relative my-4 flex items-center w-72">
-            <input
-                type={showPassword ? "text" : "password"}
-                placeholder="Password"
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
-                className='block w-full py-2.3 text-sm text-white placeholder-black bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:text-white focus:border-blue-600 peer'
-            />
-            {/* Show/Hide Password Button */}
-            <span
-                type="button"
-                className="text-sm text-blue-200 cursor-pointer ml-2"
-                onClick={() => setShowPassword(!showPassword)}
-            >
-                {showPassword ? "Hide" : "Show"}
-            </span>
-        </div>
-        
-        {/* Password Error */}
-        {error?.password && <p className='mt-2 text-xs text-red-500'>{error.password}</p>}
+                    {/* Password Input */}
+                    <div className="relative my-4 flex items-center w-72">
+                        <input
+                            type={showPassword ? "text" : "password"}
+                            placeholder="Password"
+                            name="password"
+                            value={formData.password}
+                            onChange={handleChange}
+                            className='block w-full py-2.3 text-sm text-white placeholder-black bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:text-white focus:border-blue-600 peer'
+                        />
+                        {/* Show/Hide Password Button */}
+                        <span
+                            type="button"
+                            className="text-sm text-blue-200 cursor-pointer ml-2"
+                            onClick={() => setShowPassword(!showPassword)}
+                        >
+                            {showPassword ? "Hide" : "Show"}
+                        </span>
+                    </div>
 
-        {/* Submit Button */}
-        <button
-            type="submit"
-            className="bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-md py-2 px-4 mt-4 transition-colors duration-200 ease-in-out w-full"
-        >
-            Sign In
-        </button>
-    </form>
-    
-    {/* Sign Up Link */}
-    <p className="text-white mt-4">
-        Don't have an account? <Link to='/register' className="text-blue-400 hover:text-blue-500">Sign Up</Link>
-    </p>
-</div>
-</div>
+                    {/* Password Error */}
+                    {error?.password && <p className='mt-2 text-xs text-red-500'>{error.password}</p>}
+
+                    {/* Submit Button */}
+                    <button
+                        type="submit"
+                        className="bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-md py-2 px-4 mt-4 transition-colors duration-200 ease-in-out w-full"
+                    >
+                        Sign In
+                    </button>
+                </form>
+
+                {/* Sign Up Link */}
+                <p className="text-white mt-4">
+                    Don't have an account? <Link to='/register' className="text-blue-400 hover:text-blue-500">Sign Up</Link>
+                </p>
+            </div>
+        </div>
     )
 }
 

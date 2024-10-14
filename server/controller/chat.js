@@ -4,7 +4,7 @@ const User = require("../model/userModel");
 const AccessChat = async (req, res) => {
     try {
         const { chatId } = req.body;
-        console.log('req.body: ', req.body);
+        // console.log('req.body: ', req.body);
         if (!chatId) {
             return res.status(400).json({ status: 400, message: 'Chat ID is required' });
         }
@@ -37,8 +37,6 @@ const AccessChat = async (req, res) => {
             }
         }
 
-
-
     } catch (error) {
         console.error(error);
     }
@@ -53,7 +51,7 @@ const FetchChats = async (req, res) => {
             .populate("latestMessage")
             .sort({ updatdAt: -1 })
             .then(async (result) => {
-                result = await User.populate(results, {
+                result = await User.populate(result, {
                     path: "latestMessage.sender",
                     select: "username avatar email"
                 })

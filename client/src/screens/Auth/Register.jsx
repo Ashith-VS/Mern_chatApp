@@ -84,7 +84,7 @@ const Register = () => {
     }
 
     return (
-         <div className='flex justify-center items-center h-screen bg-cover' style={{background:`url(${bgImage})`,backgroundSize: 'cover', backgroundRepeat: 'no-repeat'}} >
+         <div className='flex justify-center items-center h-screen bg-cover' style={{background:`url(${bgImage})`,objectFit: "cover"}} >
         <div className="bg-slate-800 border border-slate-400 rounded-md p-8 shadow-lg backdrop-filter backdrop-blur-sm bg-opacity-30 relative">
     <h1 className='text-4xl text-white font-bold text-center mb-6'>Create an Account</h1>
     <form onSubmit={handleSubmit}>
