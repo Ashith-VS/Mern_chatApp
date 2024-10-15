@@ -7,14 +7,15 @@ import { UrlEndPoint } from '../../http/apiConfig';
 import { isEmpty } from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
 import { handleLogout } from '../../constants/common';
-import { setSelectedChat } from '../../redux/slice/commonSlice'
-
+import { setSelectedChat,setChats, setIsNewGroupModalOpen } from '../../redux/slice/commonSlice'
 
 const Sidebar = () => {
     const dispatch = useDispatch()
     const navigate = useNavigate()
-    const { currentUser, selectedChat, chats, setChats } = useSelector(state => state.common)
-    console.log('chats4797789: ', chats);
+    const { currentUser, selectedChat, chats } = useSelector(state => state.common)
+    // console.log('isNewGroupModalOpen: ', isNewGroupModalOpen);
+    // console.log('selectedChat: ', selectedChat);
+    // console.log('chats4797789: ', chats);
     const [showDropdown, setShowDropdown] = useState(false);
     const [search, setSearch] = useState('');
     const [searchResult, setSearchResult] = useState([]);
@@ -22,21 +23,23 @@ const Sidebar = () => {
 
     useEffect(() => {
         if (chats?.length > 0) {
-            const res = chats.map(chat => chat.users.filter(user => user._id !== currentUser._id))
+            const res = chats.map(chat => chat?.users.filter(user => user._id !== currentUser._id))
+            
             setSearchResult(res.flat());
         }
     }, [chats, currentUser]);
-    console.log('currentUser: ', currentUser);
+    // console.log('currentUser: ', currentUser);
 
 
     const handleSelectContact = async (user) => {
         try {
             const url = UrlEndPoint.accessChat
             const res = await networkRequest({ url, method: 'POST', data: { chatId: user?._id } }, dispatch)
-            if (!chats.find((chat) => chat.id === res.chat._id))
-                dispatch(setChats([res?.chat, ...res?.chat]))
+            // if (!chats.find((chat) => chat.id === res.chat._id))
+                // dispatch(setChats([...chats,res?.chat,]))
             dispatch(setSelectedChat(user))
-            console.log('res444455: ', res);
+           
+            // console.log('res444455: ', res);
         } catch (error) {
             console.error('error select chat:', error)
         }
@@ -68,7 +71,7 @@ const Sidebar = () => {
                     <img
                         src={NewGrupIcon}
                         alt=""
-                        // onClick={}
+                        onClick={() => dispatch(setIsNewGroupModalOpen(true))}
                         className="w-8 h-8 rounded-full object-cover cursor-pointer"
                     />
                     <img
@@ -92,10 +95,10 @@ const Sidebar = () => {
                                         Contacts
                                     </Link>
                                 </li>
-                                <li>
-                                    <Link to="/newgroup" className="text-white">
+                                <li  onClick={() => dispatch(setIsNewGroupModalOpen(true))}>
+                                   
                                         New Group
-                                    </Link>
+                                  
                                 </li>
                                 <li onClick={() => handleLogout(navigate)}>
                                     Logout
@@ -123,9 +126,9 @@ const Sidebar = () => {
                 {searchResult?.length > 0 ?
                     searchResult?.map((contact) => (
                         <div
-                            key={contact._id}
-                            className={`p-4 hover:bg-gray-900 cursor-pointer ${selectedChat?._id === contact?._id ? "bg-blue-500 text-white" : ""}`}
-                            onClick={() => handleSelectContact(contact)}
+                        key={contact._id}
+                        className={`p-4 hover:bg-gray-900 cursor-pointer ${selectedChat?._id === contact?._id ? "bg-blue-500 text-white" : ""}`}
+                        onClick={() => handleSelectContact(contact)}
                         >
                             <div className="flex items-center space-x-4 ">
                                 <img
@@ -142,6 +145,8 @@ const Sidebar = () => {
                         </div>
                     )) : "No contacts found"}
             </div>
+                      {/* New Group Modal */}
+               
         </div>
     )
 }

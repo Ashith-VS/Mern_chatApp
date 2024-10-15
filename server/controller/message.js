@@ -18,7 +18,7 @@ const getUsersBySearch = async (req, res) => {
 const sendMessages = async (req, res) => {
     try {
         const { content, chatId } = req.body
-        console.log('chatId: ', chatId);
+        // console.log('chatId: ', chatId);
         if (!content || !chatId) return res.status(500).json({ status: 500, message: "Invalid content passed to sendMessage" })
 
         const newMessage = new Message({
@@ -27,7 +27,7 @@ const sendMessages = async (req, res) => {
             chat: chatId
         })
         let message = await newMessage.save()
-        console.log('message: ', message);
+        // console.log('message: ', message);
     
         message = await message.populate('sender', 'username avatar',)
         message = await message.populate('chat')
@@ -47,7 +47,7 @@ const allMessages = async (req, res) => {
         const messages = await Message.find({chat: req.params.chatId})
         .populate('sender',"username avatar email")
         .populate('chat')
-        console.log('messages: ', messages);
+        // console.log('messages: ', messages);
 
         res.status(200).json({ status: 200, message: 'Messages fetched successfully', messages });
     } catch (error) {

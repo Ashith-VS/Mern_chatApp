@@ -19,7 +19,7 @@ const AccessChat = async (req, res) => {
             path: "latestMessage.sender",
             select: "username avatar email"
         })
-        console.log('chat777: ', chat);
+        // console.log('chat777: ', chat);
         if (chat.length > 0) {
             res.status(200).json({ status: 200, message: 'Chat accessed successfully', chat: chat[0] });
         } else {

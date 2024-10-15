@@ -9,31 +9,30 @@ import { useNavigate } from 'react-router-dom';
 import networkRequest from '../../http/api';
 import { UrlEndPoint } from '../../http/apiConfig';
 import { useDispatch, useSelector } from 'react-redux';
+import { isEmpty } from 'lodash';
 
 
-const ChatArea = ({chats, selectedContact }) => {
-    console.log('selectedContact: ', selectedContact);
-    console.log('chats:chatarea ', chats);
+const ChatArea = () => {
     const dispatch = useDispatch()
     const navigate = useNavigate()
-    const { currentUser } = useSelector((state) => state.common);
+    const { currentUser,chats,selectedChat } = useSelector((state) => state.common);
     const [message, setMessage] = useState([]);
     const [newMessage, setNewMessage] = useState('')
     const [emojiOpen, setEmojiOpen] = useState(false);
     const [showDropdown, setShowDropdown] = useState(false);
 
 
-    useEffect(() => {
-        if (chats?.length > 0) {
-            const res = chats.find(chat => console.log("554",chat))
-            console.log('res: ', res);
-            // setUserContact(res.flat());
-        }
-    }, [chats, currentUser,selectedContact]);
+    // useEffect(() => {
+    //     if (chats?.length > 0) {
+    //         // const res = chats.find(chat => console.log("554",chat))
+    //         // console.log('res: ', res);
+    //         // setUserContact(res.flat());
+    //     }
+    // }, [chats, currentUser]);
 
 
     const fetchAllMessages = async () => {
-        if (!selectedContact) return
+        if (!selectedChat) return
         try {
             // const url = UrlEndPoint.fetchMessage(selectedContact?._id)
             const url = UrlEndPoint.fetchMessage("670cf7517db86d0d7bc54d7a")
@@ -47,7 +46,7 @@ const ChatArea = ({chats, selectedContact }) => {
 
     useEffect(() => {
         fetchAllMessages()
-    }, [selectedContact])
+    }, [selectedChat])
 
 
     const handleSendMessage = async (e) => {
@@ -56,7 +55,7 @@ const ChatArea = ({chats, selectedContact }) => {
         try {
             const url = UrlEndPoint.sendMessage
             const data = {
-                chatId: selectedContact._id,
+                chatId: selectedChat._id,
                 content: newMessage
             }
             setNewMessage('')
@@ -76,17 +75,17 @@ const ChatArea = ({chats, selectedContact }) => {
     return (
         <div className="w-3/4 flex flex-col h-full">
             <div className="flex items-center justify-between bg-gray-100 p-4 border-b border-gray-200">
-                <div className={`flex items-center space-x-4  w-full ${selectedContact ? '' : 'justify-between'}`}>
-                    {selectedContact ? (
+                <div className={`flex items-center space-x-4  w-full ${!isEmpty(selectedChat) ? '' : 'justify-between'}`}>
+                    {!isEmpty(selectedChat) ? (
                         <>
                             <img
-                                src={selectedContact.avatar}
+                                src={selectedChat.avatar}
                                 alt=''
                                 className="w-10 h-10 rounded-full object-cover  cursor-pointer"
                             />
                             <div>
-                                <h3 className="font-semibold  cursor-pointer">{selectedContact?.username}</h3>
-                                <p className="text-xs text-gray-500  cursor-pointer">{selectedContact?.onlineStatus === true ? 'online' : 'offline'}</p>
+                                <h3 className="font-semibold  cursor-pointer">{selectedChat?.username}</h3>
+                                <p className="text-xs text-gray-500  cursor-pointer">{selectedChat?.onlineStatus === true ? 'online' : 'offline'}</p>
                             </div>
                         </>
                     ) : (
@@ -122,7 +121,7 @@ const ChatArea = ({chats, selectedContact }) => {
 
             {/* Chat Messages */}
             <div className="flex-1 p-6 overflow-y-auto bg-white">
-                {selectedContact && message?.length === 0 ? (
+                {selectedChat && message?.length === 0 ? (
                     <div className="flex items-center justify-center h-full">
                         <p className="text-lg text-gray-400">Say hello to your new chat!</p>
                     </div>
@@ -142,7 +141,7 @@ const ChatArea = ({chats, selectedContact }) => {
                                 {/* Incoming Message - Contact's Avatar */}
                                 {!isSameSender && isLastMessageBySameSender && (
                                     <img
-                                        src={selectedContact.avatar || "path_to_contact_image"}
+                                        src={selectedChat.avatar || "path_to_contact_image"}
                                         alt="Contact"
                                         className="w-8 h-8 rounded-full object-cover mr-2"
                                     />
@@ -163,7 +162,7 @@ const ChatArea = ({chats, selectedContact }) => {
 
 
             {/* Input Box */}
-            {selectedContact && (
+            {selectedChat && (
                 <div className="bg-gray-100 p-4 flex items-center space-x-4 relative">
                     <div className="relative">
                         <button className="p-2 rounded-full hover:bg-gray-300">

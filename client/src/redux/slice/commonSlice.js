@@ -4,7 +4,8 @@ const initialState = {
     loading: false,
     currentUser: null,
     selectedChat: {},
-    chats: []
+    chats: [],
+    isNewGroupModalOpen : false,
 }
 
 const commonSlice = createSlice({
@@ -23,9 +24,12 @@ const commonSlice = createSlice({
         setChats: (state, action) => {
             state.chats = action.payload;
         },
+        setIsNewGroupModalOpen: (state, action) => {
+            state.isNewGroupModalOpen = action.payload;
+        },
     },
 })
 
-export const { showLoader, currentUserAuth, setSelectedChat, setChats } = commonSlice.actions;
+export const { showLoader, currentUserAuth, setSelectedChat, setChats,setIsNewGroupModalOpen } = commonSlice.actions;
 
 export default commonSlice.reducer;

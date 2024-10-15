@@ -49,6 +49,7 @@ import networkRequest from '../../http/api'
 import { useDispatch, useSelector } from 'react-redux'
 import { currentUserAuth, setChats } from '../../redux/slice/commonSlice'
 import { isEmpty } from 'lodash'
+import NewGroupModal from '../../components/NewGroupModal';
 
 
 const WhatsAppHomePage = () => {
@@ -61,6 +62,7 @@ const WhatsAppHomePage = () => {
             const url = UrlEndPoint.accessChat
             const res = await networkRequest({ url }, dispatch)
             dispatch(setChats(res.chats))
+            // console.log('res.chats: ', res.chats);
         } catch (error) {
             console.error("fetchChats:", error.message)
         }
@@ -87,6 +89,7 @@ const WhatsAppHomePage = () => {
         <div className="flex h-screen bg-gray-100">
             <Sidebar />
             <ChatArea />
+            <NewGroupModal/>
         </div>
     );
 };
