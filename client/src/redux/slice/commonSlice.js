@@ -1,8 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-    isloading: false,
+    loading: false,
     currentUser: null,
+    selectedChat: {},
+    chats: []
 }
 
 const commonSlice = createSlice({
@@ -10,14 +12,20 @@ const commonSlice = createSlice({
     initialState,
     reducers: {
         showLoader: (state, action) => {
-            state.isloading = action.payload;
+            state.loading = action.payload;
         },
         currentUserAuth: (state, action) => {
             state.currentUser = action.payload;
         },
+        setSelectedChat: (state, action) => {
+            state.selectedChat = action.payload;
+        },
+        setChats: (state, action) => {
+            state.chats = action.payload;
+        },
     },
 })
 
-export const { showLoader, currentUserAuth } = commonSlice.actions;
+export const { showLoader, currentUserAuth, setSelectedChat, setChats } = commonSlice.actions;
 
 export default commonSlice.reducer;

@@ -1,29 +1,75 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import AvatarIcon from "../../assets/icons/avatar.png"
 import arrowDownIcon from '../../assets/icons/arrowDown.png'
 import emojiIcon from '../../assets/icons/emoji.png'
-
+import moment from 'moment';
 import EmojiPicker from 'emoji-picker-react';
 import { handleLogout } from '../../constants/common';
 import { useNavigate } from 'react-router-dom';
+import networkRequest from '../../http/api';
+import { UrlEndPoint } from '../../http/apiConfig';
+import { useDispatch, useSelector } from 'react-redux';
 
-const ChatArea = ({ setMessages, messages, selectedContact }) => {
-    const navigate= useNavigate()
-    const [message, setMessage] = useState('');
+
+const ChatArea = ({chats, selectedContact }) => {
+    console.log('selectedContact: ', selectedContact);
+    console.log('chats:chatarea ', chats);
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
+    const { currentUser } = useSelector((state) => state.common);
+    const [message, setMessage] = useState([]);
+    const [newMessage, setNewMessage] = useState('')
     const [emojiOpen, setEmojiOpen] = useState(false);
     const [showDropdown, setShowDropdown] = useState(false);
 
 
-    const handleSendMessage = (e) => {
+    useEffect(() => {
+        if (chats?.length > 0) {
+            const res = chats.find(chat => console.log("554",chat))
+            console.log('res: ', res);
+            // setUserContact(res.flat());
+        }
+    }, [chats, currentUser,selectedContact]);
+
+
+    const fetchAllMessages = async () => {
+        if (!selectedContact) return
+        try {
+            // const url = UrlEndPoint.fetchMessage(selectedContact?._id)
+            const url = UrlEndPoint.fetchMessage("670cf7517db86d0d7bc54d7a")
+            const res = await networkRequest({ url }, dispatch)
+            // console.log('res: ', res.messages);
+            setMessage(res.messages)
+        } catch (error) {
+            console.error("Error fetch messages:", error);
+        }
+    }
+
+    useEffect(() => {
+        fetchAllMessages()
+    }, [selectedContact])
+
+
+    const handleSendMessage = async (e) => {
         e.preventDefault();
-        if (message) {
-            setMessages([...messages, { type: 'outgoing', text: message, time: '10:33 AM' }]);
-            setMessage('');
+        if (!newMessage.trim()) return;
+        try {
+            const url = UrlEndPoint.sendMessage
+            const data = {
+                chatId: selectedContact._id,
+                content: newMessage
+            }
+            setNewMessage('')
+            const res = await networkRequest({ url, method: 'post', data }, dispatch)
+            // console.log('res: ', res);
+            setMessage([...message, res.message])
+        } catch (error) {
+            console.error("Error sending messages:", error);
         }
     };
 
     const handleEmojiClick = (e) => {
-        setMessage((prev) => prev + e.emoji)
+        setNewMessage((prev) => prev + e.emoji)
         setEmojiOpen(false);
     }
 
@@ -64,7 +110,7 @@ const ChatArea = ({ setMessages, messages, selectedContact }) => {
                                 <div className="absolute top-14 right-0 bg-white shadow-md rounded-lg w-32 p-2">
                                     <ul>
                                         <li className="py-2 px-4 hover:bg-gray-200 cursor-pointer">Profile</li>
-                                        <li className="py-2 px-4 hover:bg-gray-200 cursor-pointer" onClick={()=>handleLogout(navigate)}>Logout</li>
+                                        <li className="py-2 px-4 hover:bg-gray-200 cursor-pointer" onClick={() => handleLogout(navigate)}>Logout</li>
                                     </ul>
                                 </div>
                             )}
@@ -73,26 +119,48 @@ const ChatArea = ({ setMessages, messages, selectedContact }) => {
                 </div>
             </div>
 
+
             {/* Chat Messages */}
             <div className="flex-1 p-6 overflow-y-auto bg-white">
-                {selectedContact && messages.length === 0 ? (
+                {selectedContact && message?.length === 0 ? (
                     <div className="flex items-center justify-center h-full">
                         <p className="text-lg text-gray-400">Say hello to your new chat!</p>
                     </div>
                 ) : (
-                    messages.map((msg, idx) => (
-                        <div key={idx} className={`flex ${msg.type === 'outgoing' ? 'justify-end' : ''} items-end space-x-2 mb-4`}>
-                            {msg.type === 'incoming' && (
-                                <img src="path_to_contact_image" alt="Contact" className="w-8 h-8 rounded-full object-cover" />
-                            )}
-                            <div className={`p-4 rounded-lg ${msg.type === 'incoming' ? 'bg-gray-100' : 'bg-blue-500 text-white'}`}>
-                                <p className="text-sm">{msg.text}</p>
+                    message.map((msg, idx) => {
+                        const isSameSender = msg.sender._id === currentUser?._id;
+
+
+                        // console.log('currentUser?._id: ', currentUser._id);
+                        // console.log(' msg.sender._id: ',  msg.sender._id);
+                        // console.log('isSameSender: ', isSameSender);
+                        //   console.log('msg: ', msg)
+                        const isLastMessageBySameSender = idx === message.length - 1 || message[idx + 1]?.sender._id !== msg.sender._id;
+
+                        return (
+                            <div key={msg._id} className={`flex mb-4 ${isSameSender ? 'justify-end' : 'justify-start'}`}>
+                                {/* Incoming Message - Contact's Avatar */}
+                                {!isSameSender && isLastMessageBySameSender && (
+                                    <img
+                                        src={selectedContact.avatar || "path_to_contact_image"}
+                                        alt="Contact"
+                                        className="w-8 h-8 rounded-full object-cover mr-2"
+                                    />
+                                )}
+
+                                <div className={`max-w-xs p-3 rounded-lg shadow-md ${isSameSender ? 'bg-gray-500 text-white rounded-br-none' : 'bg-blue-200 text-black rounded-bl-none'}`}>
+                                    <p className="text-sm">{msg.content}</p>
+                                    <span className="text-xs text-gray-400 block text-right mt-1">
+                                        {moment(msg.createdAt).format('hh:mm A')}
+                                    </span>
+                                </div>
                             </div>
-                            <span className="text-xs text-gray-400">{msg.time}</span>
-                        </div>
-                    ))
+                        );
+                    })
                 )}
             </div>
+
+
 
             {/* Input Box */}
             {selectedContact && (
@@ -108,8 +176,8 @@ const ChatArea = ({ setMessages, messages, selectedContact }) => {
                     <input
                         type="text"
                         placeholder="Type a message"
-                        value={message}
-                        onChange={(e) => setMessage(e.target.value)}
+                        value={newMessage}
+                        onChange={(e) => setNewMessage(e.target.value)}
                         className="flex-1 p-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                     <button

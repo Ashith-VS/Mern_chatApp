@@ -15,3 +15,14 @@ code {
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* index.css or App.css */
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+    background-color: transparent !important;
+    -webkit-text-fill-color: white !important;
+    /* box-shadow: 0 0 0px 1000px rgba(0, 0, 0, 0.2) inset !important; */
+    transition: background-color 5000s ease-in-out 0s;
+}

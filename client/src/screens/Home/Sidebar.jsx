@@ -5,32 +5,40 @@ import { Link, useNavigate } from 'react-router-dom';
 import networkRequest from '../../http/api';
 import { UrlEndPoint } from '../../http/apiConfig';
 import { isEmpty } from 'lodash';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { handleLogout } from '../../constants/common';
+import { setSelectedChat } from '../../redux/slice/commonSlice'
 
 
-const Sidebar = ({ chats, setSelectedContact, selectedContact, setMessages }) => {
-    const navigate=useNavigate()
-    const { currentUser } = useSelector(state => state.common)
+const Sidebar = () => {
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
+    const { currentUser, selectedChat, chats, setChats } = useSelector(state => state.common)
+    console.log('chats4797789: ', chats);
     const [showDropdown, setShowDropdown] = useState(false);
     const [search, setSearch] = useState('');
-    const [userContact, setUserContact] = useState([]);
+    const [searchResult, setSearchResult] = useState([]);
+
 
     useEffect(() => {
         if (chats?.length > 0) {
             const res = chats.map(chat => chat.users.filter(user => user._id !== currentUser._id))
-            setUserContact(res.flat());
+            setSearchResult(res.flat());
         }
     }, [chats, currentUser]);
+    console.log('currentUser: ', currentUser);
 
 
-    const handleSelectContact = async (contact) => {
-        setSelectedContact(contact);
+    const handleSelectContact = async (user) => {
         try {
             const url = UrlEndPoint.accessChat
-            const res = await networkRequest({ url, method: 'POST', data: { chatId: contact?._id } })
-            // console.log('res: ', res);
+            const res = await networkRequest({ url, method: 'POST', data: { chatId: user?._id } }, dispatch)
+            if (!chats.find((chat) => chat.id === res.chat._id))
+                dispatch(setChats([res?.chat, ...res?.chat]))
+            dispatch(setSelectedChat(user))
+            console.log('res444455: ', res);
         } catch (error) {
+            console.error('error select chat:', error)
         }
     };
 
@@ -38,12 +46,12 @@ const Sidebar = ({ chats, setSelectedContact, selectedContact, setMessages }) =>
         try {
             setSearch(e.target.value);
             if (isEmpty(e.target.value)) {
-                setUserContact([]);
+                setSearchResult([]);
                 return;
             } else {
                 const url = UrlEndPoint.search(e.target.value)
-                const res = await networkRequest({ url })
-                setUserContact(res?.users || []);
+                const res = await networkRequest({ url }, dispatch)
+                setSearchResult(res?.users || []);
             }
         } catch (error) {
             console.error('search fail:', error)
@@ -89,7 +97,7 @@ const Sidebar = ({ chats, setSelectedContact, selectedContact, setMessages }) =>
                                         New Group
                                     </Link>
                                 </li>
-                                <li onClick={()=>handleLogout(navigate)}>
+                                <li onClick={() => handleLogout(navigate)}>
                                     Logout
                                 </li>
                             </ul>
@@ -112,11 +120,11 @@ const Sidebar = ({ chats, setSelectedContact, selectedContact, setMessages }) =>
 
             {/* Contact List */}
             <div className="flex-1 overflow-y-auto">
-                {userContact?.length > 0 ?
-                    userContact?.map((contact) => (
+                {searchResult?.length > 0 ?
+                    searchResult?.map((contact) => (
                         <div
                             key={contact._id}
-                            className={`p-4 hover:bg-gray-900 cursor-pointer ${selectedContact?._id === contact?._id ? "bg-blue-500 text-white" : ""}`}
+                            className={`p-4 hover:bg-gray-900 cursor-pointer ${selectedChat?._id === contact?._id ? "bg-blue-500 text-white" : ""}`}
                             onClick={() => handleSelectContact(contact)}
                         >
                             <div className="flex items-center space-x-4 ">

@@ -47,25 +47,20 @@ import ChatArea from './ChatArea';
 import { UrlEndPoint } from '../../http/apiConfig'
 import networkRequest from '../../http/api'
 import { useDispatch, useSelector } from 'react-redux'
-import { currentUserAuth } from '../../redux/slice/commonSlice'
+import { currentUserAuth, setChats } from '../../redux/slice/commonSlice'
 import { isEmpty } from 'lodash'
 
 
 const WhatsAppHomePage = () => {
     const dispatch = useDispatch()
-    const { currentUser } = useSelector(state => state.common)
     const token = localStorage.getItem('auth_token');
-
-    const [chats, setChats] = useState([]);
-    const [messages, setMessages] = useState([]);
-    const [selectedContact, setSelectedContact] = useState(null);
-
+    const { currentUser } = useSelector(state => state.common)
 
     const fetchChats = async () => {
         try {
             const url = UrlEndPoint.accessChat
-            const res = await networkRequest({ url })
-            setChats(res.chats)
+            const res = await networkRequest({ url }, dispatch)
+            dispatch(setChats(res.chats))
         } catch (error) {
             console.error("fetchChats:", error.message)
         }
@@ -74,7 +69,7 @@ const WhatsAppHomePage = () => {
     const fetchCurrentUser = async () => {
         try {
             const url = UrlEndPoint.currentUser
-            const res = await networkRequest({ url })
+            const res = await networkRequest({ url }, dispatch)
             dispatch(currentUserAuth(res.user))
         } catch (error) {
             console.error(error)
@@ -90,8 +85,8 @@ const WhatsAppHomePage = () => {
 
     return (
         <div className="flex h-screen bg-gray-100">
-            <Sidebar chats={chats} setSelectedContact={setSelectedContact} selectedContact={selectedContact} setMessages={setMessages} />
-            <ChatArea selectedContact={selectedContact} setMessages={setMessages} messages={messages} />
+            <Sidebar />
+            <ChatArea />
         </div>
     );
 };

@@ -1,12 +1,13 @@
 import axios from "axios";
 import { baseUrl } from "./apiConfig";
-// import { showLoader } from "../Redux/Action/AuthenticationAction";
+import { showLoader } from "../redux/slice/commonSlice";
+
 
 let activeRequests = 0;
 
 const networkRequest = async ({ url, method = 'GET', data = {}, headers = {} }, dispatch) => {
 activeRequests++;
-// dispatch(showLoader(true))
+dispatch(showLoader(true))
 
     const config = {
         url: baseUrl + url,
@@ -47,7 +48,7 @@ return new Promise(async(resolve, reject) => {
         activeRequests--;
         // console.log(`Request finished. Active requests: ${activeRequests}`);
         if (activeRequests === 0) {
-            // dispatch(showLoader(false));
+            dispatch(showLoader(false));
         }
     }
 })

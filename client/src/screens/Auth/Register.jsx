@@ -7,8 +7,10 @@ import networkRequest from '../../http/api'
 import { UrlEndPoint } from '../../http/apiConfig'
 import { Link, useNavigate } from 'react-router-dom'
 import bgImage from "../../assets/icons/bg.jpg"
+import { useDispatch } from 'react-redux'
 
 const Register = () => {
+    const dispatch =useDispatch()
     const navigate = useNavigate()
     const [error, setError] = useState({})
     const [showPassword, setShowPassword] = useState({
@@ -33,7 +35,7 @@ const Register = () => {
         } else {
             try {
                 const url = UrlEndPoint.register
-                const res = await networkRequest({ url, method: 'POST', data: formData })
+                const res = await networkRequest({ url, method: 'POST', data: formData },dispatch)
                 if (res.status === 200) {
                     toast.success("Successfully registered.")
                     navigate('/login')
@@ -110,7 +112,7 @@ const Register = () => {
                 name="username"
                 value={formData.username}
                 onChange={handleChange}
-                className='block w-72 py-2.3 text-sm text-white placeholder-black  bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:text-white focus:border-blue-600 peer'
+                className='block w-72 py-2.3 text-sm text-white placeholder-white bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:text-white focus:border-blue-600 peer'
             />
             {error?.username && <p className='mt-2 text-xs text-red-500'>{error.username}</p>}
         </div>
@@ -123,7 +125,7 @@ const Register = () => {
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                className='block w-72 py-2.3 text-sm text-white placeholder-black  bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:text-white focus:border-blue-600 peer'
+                className='block w-72 py-2.3 text-sm text-white placeholder-white  bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:text-white focus:border-blue-600 peer'
             />
             {error?.email && <p className='mt-2 text-xs text-red-500'>{error.email}</p>}
         </div>
@@ -136,7 +138,7 @@ const Register = () => {
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
-                className='block w-full py-2.3 text-sm text-white placeholder-black  bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:text-white focus:border-blue-600 peer'
+                className='block w-full py-2.3 text-sm text-white placeholder-white  bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:text-white focus:border-blue-600 peer'
             />
             <span
                 className="text-sm text-blue-200 cursor-pointer ml-2"
@@ -155,7 +157,7 @@ const Register = () => {
                 name="confirmPassword"
                 value={formData.confirmPassword}
                 onChange={handleChange}
-                className='block w-full py-2.3 text-sm text-white placeholder-black  bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:text-white focus:border-blue-600 peer'
+                className='block w-full py-2.3 text-sm text-white placeholder-white  bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:text-white focus:border-blue-600 peer'
             />
             <span
                 className="text-sm text-blue-200 cursor-pointer ml-2"
@@ -177,7 +179,7 @@ const Register = () => {
 
     {/* Sign In Link */}
     <p className="text-white mt-4">
-        Already have an account? <Link to='/login' className="text-blue-400 hover:text-blue-500">Sign In</Link>
+        Already have an account? <Link to='/login' className="text-blue-700 hover:text-blue-500">Sign In</Link>
     </p>
 </div>
 </div> 
