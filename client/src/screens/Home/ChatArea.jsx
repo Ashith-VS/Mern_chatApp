@@ -4,18 +4,20 @@ import arrowDownIcon from '../../assets/icons/arrowDown.png'
 import emojiIcon from '../../assets/icons/emoji.png'
 import moment from 'moment';
 import EmojiPicker from 'emoji-picker-react';
+import moreIcon from "../../assets/icons/more_icon.png"
 import { handleLogout } from '../../constants/common';
 import { useNavigate } from 'react-router-dom';
 import networkRequest from '../../http/api';
 import { UrlEndPoint } from '../../http/apiConfig';
 import { useDispatch, useSelector } from 'react-redux';
 import { isEmpty } from 'lodash';
+import { setIsContactModalOpen, setIsProfileModal } from '../../redux/slice/commonSlice';
 
 
 const ChatArea = () => {
     const dispatch = useDispatch()
     const navigate = useNavigate()
-    const { currentUser,chats,selectedChat } = useSelector((state) => state.common);
+    const { currentUser, chats, selectedChat } = useSelector((state) => state.common);
     const [message, setMessage] = useState([]);
     const [newMessage, setNewMessage] = useState('')
     const [emojiOpen, setEmojiOpen] = useState(false);
@@ -87,6 +89,22 @@ const ChatArea = () => {
                                 <h3 className="font-semibold  cursor-pointer">{selectedChat?.username}</h3>
                                 <p className="text-xs text-gray-500  cursor-pointer">{selectedChat?.onlineStatus === true ? 'online' : 'offline'}</p>
                             </div>
+                            <div className='flex-grow flex justify-end items-center p-3 relative '>
+                            <img
+                                src={moreIcon}
+                                alt=""
+                                onClick={() => setShowDropdown(!showDropdown)}
+                                className="w-8 h-8 rounded-full object-cover cursor-pointer"
+                            />
+                            </div>
+                            {showDropdown && (
+                                <div className="absolute top-14 right-0 bg-white shadow-md rounded-lg w-32 p-2">
+                                    <ul>
+                                        <li className="py-2  hover:bg-gray-200 cursor-pointer" onClick={() => dispatch(setIsContactModalOpen(true))}>Contact info</li>
+                                        <li className="py-2  hover:bg-gray-200 cursor-pointer" onClick={() => handleLogout(navigate)}>Logout</li>
+                                    </ul>
+                                </div>
+                            )}
                         </>
                     ) : (
                         <>
@@ -108,7 +126,7 @@ const ChatArea = () => {
                             {showDropdown && (
                                 <div className="absolute top-14 right-0 bg-white shadow-md rounded-lg w-32 p-2">
                                     <ul>
-                                        <li className="py-2 px-4 hover:bg-gray-200 cursor-pointer">Profile</li>
+                                        <li className="py-2 px-4 hover:bg-gray-200 cursor-pointer" onClick={() => dispatch(setIsProfileModal(true))}>Profile</li>
                                         <li className="py-2 px-4 hover:bg-gray-200 cursor-pointer" onClick={() => handleLogout(navigate)}>Logout</li>
                                     </ul>
                                 </div>
