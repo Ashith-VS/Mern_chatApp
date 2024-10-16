@@ -26,7 +26,6 @@ const Chat = () => {
 
   return (
     <div className='chat'>
-
       <div className="top">
         <div className="user">
           <img src={avatarIcon} alt="" />
